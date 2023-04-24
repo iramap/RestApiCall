@@ -35,20 +35,21 @@ class _HomePageState extends State<HomePage> {
           //  final color = user.gender == "male" ? Colors.red : Colors.blue;
           // final imageUrl = user["picture"]["thumbnail"];
           return ListTile(
-            // leading: ClipRRect(
-            //     borderRadius: BorderRadius.circular(100),
-            //     child: Image.network(imageUrl)),
+            leading: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(user.picture.medium)),
             title: Text(user.fullName),
             subtitle: Text(user.location.timezone.description),
+            // trailing: Text("${index + 1}"),
             // textColor: color,
             // subtitle: Text(email),
           );
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: fetchUsers,
-      //   child: const Icon(Icons.people_alt_outlined),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: fetchUsers,
+        child: const Icon(Icons.people_alt_outlined),
+      ),
     );
   }
 
