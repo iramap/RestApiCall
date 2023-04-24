@@ -1,7 +1,8 @@
-import 'dart:convert';
-
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:rest_api_call/model/users.dart';
+import 'package:rest_api_call/services/fetch_users_api.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,7 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<dynamic> users = [];
+  List<Users> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUsers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,33 +30,32 @@ class _HomePageState extends State<HomePage> {
         itemCount: users.length,
         itemBuilder: (context, index) {
           final user = users[index];
-          final name = user["name"]["first"];
-          final email = user["email"];
-          final imageUrl = user["picture"]["thumbnail"];
+          // final name = user["name"]["first"];
+          // final email = user.email;
+          //  final color = user.gender == "male" ? Colors.red : Colors.blue;
+          // final imageUrl = user["picture"]["thumbnail"];
           return ListTile(
-            leading: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(imageUrl)),
-            title: Text(name),
-            subtitle: Text(email),
+            // leading: ClipRRect(
+            //     borderRadius: BorderRadius.circular(100),
+            //     child: Image.network(imageUrl)),
+            title: Text(user.fullName),
+            subtitle: Text(user.location.timezone.description),
+            // textColor: color,
+            // subtitle: Text(email),
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: fetchUsers, child: const Icon(Icons.people_alt_outlined)),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: fetchUsers,
+      //   child: const Icon(Icons.people_alt_outlined),
+      // ),
     );
   }
 
-  void fetchUsers() async {
-    print("fetchUsers Called");
-    const url = "https://randomuser.me/api/?results=50";
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    final body = response.body;
-    final json = jsonDecode(body);
+  Future<void> fetchUsers() async {
+    final response = await FetchUsersApi.fetchUsers();
     setState(() {
-      users = json["results"];
+      users = response;
     });
-    print("fetchUsers Completed");
   }
 }
